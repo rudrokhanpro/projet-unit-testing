@@ -48,7 +48,6 @@ Given("je suis connecté", async function () {
 });
 
 Given("je suis sur la page Feed", async function () {
-  // Write code here that turns the phrase above into concrete actions
 
   await SignIn({ page });
 
@@ -58,7 +57,6 @@ Given("je suis sur la page Feed", async function () {
 });
 
 Given("je suis sur la page Feed sans être connecté", async function () {
-  // Write code here that turns the phrase above into concrete actions
   const signIntBtn = await page.locator('button:has-text("Sign in")');
   const registerBtn = await page.locator('button:has-text("Register")');
   await expect(signIntBtn).toBeTruthy();
@@ -68,17 +66,11 @@ Given("je suis sur la page Feed sans être connecté", async function () {
 });
 
 When("je clique sur un post d'un autre utilisateur", async function () {
-  // Write code here that turns the phrase above into concrete actions
-
   await page
     .locator(`text=/@(!${process.env.TEST_USERNAME})([a-z0-9]+)/i`)
     .click();
-
-  return "pending";
 });
 
 Then("je suis redirigé vers la page Login", async function () {
   await expect(page).toHaveURL("http://localhost:3000/login/sign-in");
-
-  return "pending";
 });
