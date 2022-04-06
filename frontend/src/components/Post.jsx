@@ -61,6 +61,10 @@ export default function Post() {
           data.data.attributes?.image?.data?.attributes?.formats?.medium?.url
         ) {
           formatedPost.image = `http://localhost:1337${data.data.attributes.image.data.attributes.formats.medium.url}`;
+        } else if (
+          data.data.attributes?.image?.data?.attributes?.formats?.thumbnail?.url
+        ) {
+          formatedPost.image = `http://localhost:1337${data.data.attributes.image.data.attributes.formats.thumbnail.url}`;
         }
         setPost(formatedPost);
       } catch (err) {

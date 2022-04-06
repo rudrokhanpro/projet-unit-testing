@@ -6,27 +6,41 @@ import { AuthContext } from "../context/auth";
 const ProfileSettings = () => {
   const { jwt, user, onLogin } = useContext(AuthContext);
   const [biography, setBiography] = useState(user.biography || "");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const { data } = await axios.put(
-      `http://localhost:1337/api/users/${user.id}`,
-      {
-        data: {
-          biography,
+    try {
+      setIsLoading(true);
+      setError(null);
+      setSuccess(false);
+      const { data } = await axios.put(
+        `http://localhost:1337/api/users/${user.id}`,
+        {
+          data: {
+            biography,
+          },
         },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    );
-
-    console.log(data);
-
-    onLogin({ jwt, user: { ...user, biography } });
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      console.log(data);
+      onLogin({ jwt, user: { ...user, biography } });
+      setSuccess(true);
+    } catch (err) {
+      setError(
+        err.request?.data?.error?.message ||
+          err.response?.data?.error?.message ||
+          err.message
+      );
+    } finally {
+      setIsLoading(true);
+    }
   };
   useEffect(() => {
     console.log(user);
@@ -37,6 +51,19 @@ const ProfileSettings = () => {
   return (
     <div className="ProfileSettings">
       <h4 className="h4">Profile settings</h4>
+
+      {error && (
+        <div className="error">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="success">
+          <p>Profile updated successfully</p>
+        </div>
+      )}
+
       <div className="grid gap-4 grid-cols-2">
         <div>
           <label htmlFor="username">Username</label>
@@ -59,8 +86,11 @@ const ProfileSettings = () => {
           rows="4"
         ></textarea>
 
-        <div className="text-right">
-          <button className="btn btn--info">Update profile</button>
+        <div className="flex items-center justify-end gap-4">
+          {isLoading && <div className="Spinner"></div>}
+          <button className="btn btn--info" disabled={isLoading}>
+            Update profile
+          </button>
         </div>
       </form>
     </div>
@@ -68,9 +98,12 @@ const ProfileSettings = () => {
 };
 
 const PasswordSettings = () => {
-  const { jwt, user, onLogin } = useContext(AuthContext);
+  const { jwt, onLogin } = useContext(AuthContext);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handlePasswordChange = (event) => setPassword(event.target.value);
   const handlePasswordConfirmationChange = (event) =>
@@ -79,25 +112,37 @@ const PasswordSettings = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { data } = await axios.post(
-      `http://localhost:1337/api/auth/reset-password`,
-      {
-        password,
-      },
-
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
+    try {
+      setIsLoading(true);
+      setError(null);
+      setSuccess(false);
+      const { data } = await axios.post(
+        `http://localhost:1337/api/auth/reset-password`,
+        {
+          password,
         },
-      }
-    );
 
-    console.log(data);
-
-    onLogin(data);
-
-    setPassword("");
-    setPasswordConfirmation("");
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      console.log(data);
+      onLogin(data);
+      setPassword("");
+      setPasswordConfirmation("");
+      setSuccess(true);
+    } catch (err) {
+      console.log(err);
+      setError(
+        err.request?.data?.error?.message ||
+          err.response?.data?.error?.message ||
+          err.message
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -105,6 +150,16 @@ const PasswordSettings = () => {
       <h4 className="h4">Password settings</h4>
 
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="error">
+            <p>{error}</p>
+          </div>
+        )}
+        {success && (
+          <div className="success">
+            <p>Password updated successfully</p>
+          </div>
+        )}
         <div className="grid gap-4 grid-cols-2">
           <div>
             <label htmlFor="password">New password</label>
@@ -125,8 +180,10 @@ const PasswordSettings = () => {
             />
           </div>
         </div>
-        <div className="text-right">
-          <button type="submit" className="btn btn--info">
+
+        <div className="flex items-center justify-end gap-4">
+          {isLoading && <div className="Spinner"></div>}
+          <button type="submit" className="btn btn--info" disabled={isLoading}>
             Update password
           </button>
         </div>

@@ -8,6 +8,9 @@ const Form = () => {
   const { jwt, user } = useContext(AuthContext);
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const isDisabled = !content || isLoading;
 
   const handleContentChange = ({ target: { value } }) => setContent(value);
   const handleImageChange = ({ target: { files } }) => {
@@ -17,37 +20,52 @@ const Form = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(content, image, jwt);
 
     const headers = {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "multipart/form-data",
     };
 
-    const formData = new FormData();
-    formData.append(
-      "data",
-      JSON.stringify({
-        content,
-        user: user.id,
-      })
-    );
-    formData.append("files.image", image);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-    const { data } = await axios.post(
-      "http://localhost:1337/api/posts",
-      formData,
-      {
-        headers,
-      }
-    );
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          content,
+          user: user.id,
+        })
+      );
+      formData.append("files.image", image);
 
-    navigate(`/post/${data.data.id}`);
-    console.log(data);
+      const { data } = await axios.post(
+        "http://localhost:1337/api/posts",
+        formData,
+        {
+          headers,
+        }
+      );
+
+      console.log(data);
+      navigate(`/post/${data.data.id}`);
+    } catch (err) {
+      setError(
+        err.request?.data?.error?.message ||
+          err.response?.data?.error?.message ||
+          err.message
+      );
+    }
   };
 
   return (
     <form className="NewPostForm" onSubmit={handleSubmit}>
+      {error && (
+        <div className="error">
+          <p>{error}</p>
+        </div>
+      )}
       <textarea
         value={content}
         onChange={handleContentChange}
@@ -66,8 +84,13 @@ const Form = () => {
         accept="image/*"
       />
 
-      <div className="text-right">
-        <button type="submit" className="btn btn--primary">
+      <div className="flex items-center justify-end gap-4">
+        {isLoading && <div className="Spinner"></div>}
+        <button
+          type="submit"
+          className="btn btn--primary"
+          disabled={isDisabled}
+        >
           Share
         </button>
       </div>

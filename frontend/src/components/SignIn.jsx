@@ -8,6 +8,9 @@ export default function SignIn() {
   const { onLogin } = useContext(AuthContext);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const isDisabled = !(identifier && password) || isLoading;
 
   const handleIdentifierChange = ({ target: { value } }) =>
     setIdentifier(value);
@@ -16,16 +19,31 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { data } = await axios.post("http://localhost:1337/api/auth/local", {
-      identifier,
-      password,
-    });
+    try {
+      setError(null);
+      setIsLoading(true);
 
-    console.log(data);
+      const { data } = await axios.post(
+        "http://localhost:1337/api/auth/local",
+        {
+          identifier,
+          password,
+        }
+      );
+      console.log(data);
 
-    onLogin(data);
-
-    navigate("/");
+      onLogin(data);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      setError(
+        err.request?.data?.error?.message ||
+          err.response?.data?.error?.message ||
+          err.message
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,6 +53,11 @@ export default function SignIn() {
       </div>
 
       <form className="SignIn__form" onSubmit={handleSubmit}>
+        {error && (
+          <div className="error">
+            <p>{error}</p>
+          </div>
+        )}
         <input
           value={identifier}
           onChange={handleIdentifierChange}
@@ -54,7 +77,11 @@ export default function SignIn() {
           required
         />
 
-        <button type="submit" className="btn btn--primary w-full mb-2">
+        <button
+          type="submit"
+          className="btn btn--primary w-full mb-2"
+          disabled={isDisabled}
+        >
           Sign in
         </button>
       </form>

@@ -4,6 +4,14 @@ import { AuthContext } from "../context/auth";
 import axios from "axios";
 import PostCard from "./PostCard";
 
+const NotFoundProfile = () => {
+  return (
+    <div className="NotFoundPost">
+      <h4 className="h4">Profile not found or deleted</h4>
+    </div>
+  );
+};
+
 export default function Profile() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -11,6 +19,10 @@ export default function Profile() {
   const [profileUser, setProfileUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const isAuthor = user?.id && profileUser?.id && user.id === profileUser.id;
+  const postCount = posts.length;
+  const formatedPostCount = `${postCount} ${
+    postCount === 1 ? "post" : "posts"
+  }`;
 
   const PostList = () =>
     posts.map((post) => {
@@ -26,6 +38,10 @@ export default function Profile() {
 
       if (post.attributes?.image?.data?.attributes?.formats?.medium?.url) {
         props.image = `http://localhost:1337${post.attributes.image.data.attributes.formats.medium.url}`;
+      } else if (
+        post.attributes?.image?.data?.attributes?.formats?.thumbnail?.url
+      ) {
+        props.image = `http://localhost:1337${post.attributes.image.data.attributes.formats.thumbnail.url}`;
       }
       console.log(props);
 
@@ -69,26 +85,25 @@ export default function Profile() {
 
   return (
     <div className="Profile">
-      <h3 className="h3">Profile</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="h3 inline-block">Profile</h3>
+        {isAuthor && <button className="btn btn--info">Edit</button>}
+      </div>
 
       {profileUser ? (
         <>
           <div className="mb-4">
             <h4 className="h4">@{profileUser.username}</h4>
             <p>{profileUser.biography}</p>
-
-            {isAuthor && <button className="btn btn--info">Edit</button>}
           </div>
 
           <div>
-            <p className="text-gray-400 font-bold">
-              {posts && posts.length} post
-            </p>
+            <p className="text-gray-400 font-bold">{formatedPostCount}</p>
           </div>
           <PostList />
         </>
       ) : (
-        <></>
+        <NotFoundProfile />
       )}
     </div>
   );

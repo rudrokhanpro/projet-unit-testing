@@ -10,6 +10,9 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const isDisabled = !(username && email && password) | isLoading;
 
   const handleUsernameChange = ({ target: { value } }) => setUsername(value);
   const handleEmailChange = ({ target: { value } }) => setEmail(value);
@@ -22,20 +25,35 @@ export default function Register() {
 
     console.log(username, email, password, passwordConfirmation);
 
-    const { data } = await axios.post(
-      "http://localhost:1337/api/auth/local/register",
-      {
-        username,
-        email,
-        password,
+    setIsLoading(true);
+
+    try {
+      if (password !== passwordConfirmation) {
+        throw new Error("Passwords don't match");
       }
-    );
 
-    onLogin(data);
+      const { data } = await axios.post(
+        "http://localhost:1337/api/auth/local/register",
+        {
+          username,
+          email,
+          password,
+        }
+      );
 
-    navigate("/");
-
-    console.log(data);
+      console.log(data);
+      onLogin(data);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      setError(
+        err.request?.data?.error?.message ||
+          err.response?.data?.error?.message ||
+          err.message
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,6 +63,11 @@ export default function Register() {
       </div>
 
       <form className="Register__form" onSubmit={handleSubmit}>
+        {error && (
+          <div className="error">
+            <p>{error}</p>
+          </div>
+        )}
         <input
           value={username}
           onChange={handleUsernameChange}
@@ -86,7 +109,11 @@ export default function Register() {
           required
         />
 
-        <button type="submit" className="btn btn--primary w-full mb-2">
+        <button
+          type="submit"
+          className="btn btn--primary w-full mb-2"
+          disabled={isDisabled}
+        >
           Register
         </button>
       </form>

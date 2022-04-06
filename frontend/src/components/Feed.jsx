@@ -1,14 +1,22 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/auth";
 import PostCard from "./PostCard";
-import Spinner from "./Spinner";
+
+const NoPosts = () => (
+  <div className="text-center p-2 bg-gray-50 rounded-xl">
+    <p className="text-gray-400 font-bold">No posts</p>
+  </div>
+);
 
 const Posts = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const postCount = posts.length;
+  const formatedPostCount = `${postCount} ${
+    postCount === 1 ? "post" : "posts"
+  }`;
 
   useEffect(() => {
     (async () => {
@@ -36,6 +44,10 @@ const Posts = () => {
 
       if (post.attributes?.image?.data?.attributes?.formats?.medium?.url) {
         props.image = `http://localhost:1337${post.attributes.image.data.attributes.formats.medium.url}`;
+      } else if (
+        post.attributes?.image?.data?.attributes?.formats?.thumbnail?.url
+      ) {
+        props.image = `http://localhost:1337${post.attributes.image.data.attributes.formats.thumbnail.url}`;
       }
 
       const handleClick = () => navigate(`/post/${post.id}`);
@@ -43,7 +55,24 @@ const Posts = () => {
       return <PostCard {...props} onClick={handleClick} />;
     });
 
-  return <div>{isLoading ? <Spinner /> : <PostList />}</div>;
+  return (
+    <div className="">
+      {isLoading ? (
+        <div className="text-center">
+          <div className="Spinner"></div>
+        </div>
+      ) : postCount ? (
+        <>
+          <div>
+            <p className="text-gray-400 font-bold">{formatedPostCount}</p>
+          </div>
+          <PostList />
+        </>
+      ) : (
+        <NoPosts />
+      )}
+    </div>
+  );
 };
 
 function Feed() {
@@ -53,11 +82,13 @@ function Feed() {
 
   return (
     <div className="Feed">
-      <h3 className="h3">Feed</h3>
-
-      <div className="text-right" onClick={handleNewPostClick}>
-        <button className="btn btn--primary">New Post</button>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="h3 inline-block">Feed</h3>
+        <button className="btn btn--primary" onClick={handleNewPostClick}>
+          New Post
+        </button>
       </div>
+
       <Posts />
     </div>
   );
