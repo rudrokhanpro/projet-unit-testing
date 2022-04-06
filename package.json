@@ -1,0 +1,25 @@
+{
+  "name": "projet",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "cucumber": "./node_modules/.bin/cucumber-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rudrokhanpro/projet-unit-testing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rudrokhanpro/projet-unit-testing/issues"
+  },
+  "homepage": "https://github.com/rudrokhanpro/projet-unit-testing#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.3.2",
+    "@cucumber/pretty-formatter": "^1.0.0-alpha.2",
+    "@playwright/test": "^1.20.2",
+    "playwright": "^1.20.2"
+  }
+}
