@@ -29,7 +29,6 @@ When('je clique sur le bouton Sign in', async function () {
 
 Then('je suis redirigé vers la page Feed', async function () {
     await expect(page).toHaveURL('http://localhost:3000/feed');
-    return 'pending';
 });
 
 When('je saisis un nom d\'utilisateur inexistant', async function () {

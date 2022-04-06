@@ -15,7 +15,6 @@ Given('je suis sur la page Feed', async function () {
 Given('je suis sur la page Feed sans être connecté', async function () {
     // Write code here that turns the phrase above into concrete actions
     await page.goto('http://localhost:3000/feed');
-    return 'pending';
 });
 
 When('je clique sur un post d\'un autre utilisateur', async function () {
