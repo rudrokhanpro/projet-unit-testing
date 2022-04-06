@@ -2,8 +2,6 @@ require("dotenv").config();
 const { Given, When, Then } = require("@cucumber/cucumber");
 const { expect } = require("@playwright/test");
 
-console.log(process.env);
-
 if (
   !(
     process.env.TEST_USERNAME &&
