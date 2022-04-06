@@ -1,0 +1,10 @@
+.Login {
+}
+
+.SignIn,
+.Register {
+  @apply w-96 mx-auto mt-8 text-center;
+}
+
+.SignIn__header {
+}

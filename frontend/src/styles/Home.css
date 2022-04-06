@@ -1,0 +1,71 @@
+.Home {
+  @apply flex items-stretch;
+}
+
+.Sidebar {
+  @apply w-64 p-4 flex-none;
+}
+
+.Sidebar__header {
+}
+
+.Sidebar__items {
+}
+
+.item {
+  @apply flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer;
+}
+
+.item__label {
+}
+
+.item--active {
+  @apply bg-orange-600 font-bold text-white;
+}
+
+.Feed {
+  @apply p-4 w-full;
+}
+
+.Feed__Posts {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.PostCard {
+  @apply mt-4 p-4 rounded-xl shadow-md border bg-white;
+}
+
+.PostCard__author {
+  @apply font-bold mb-2;
+}
+
+.PostCard__content {
+  @apply mb-2;
+}
+
+.PostCard__image {
+  @apply mb-2 mx-auto rounded-xl;
+}
+
+.PostCard__likes {
+  @apply font-bold;
+}
+
+.NewPost {
+  @apply p-4 flex-1;
+}
+
+.NewPostCardForm {
+}
+
+.Post {
+  @apply p-4 flex-1;
+}
+
+.Settings {
+  @apply p-4 flex-1;
+}
+
+.Profile {
+  @apply p-4 flex-1;
+}

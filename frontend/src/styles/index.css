@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.h1 {
+  @apply text-8xl font-black mb-6;
+}
+
+.h2 {
+  @apply text-6xl font-black mb-6;
+}
+
+.h3 {
+  @apply text-4xl font-black mb-4;
+}
+
+.h4 {
+  @apply text-2xl font-black mb-2;
+}
+
+a {
+  @apply text-orange-600 underline;
+}
+
+.header {
+  @apply flex items-center justify-between px-4 py-2 gap-2 border-b-2;
+}
+
+.header--default {
+}
+
+.header__brand {
+  @apply text-2xl font-bold text-black no-underline;
+}
+
+.header__content {
+}
+
+.header__actions {
+  @apply flex gap-2;
+}
+
+.btn {
+  @apply px-4 py-1 border-2 rounded-full font-bold bg-white text-black;
+}
+
+.btn:hover {
+  @apply border-gray-200 bg-gray-200;
+}
+
+.btn--primary {
+  @apply border-orange-600 bg-orange-600 text-white;
+}
+
+.btn--primary:hover {
+  @apply border-orange-400 bg-orange-400 text-white;
+}
+
+.btn--info {
+  @apply border-gray-600 bg-gray-600 text-white;
+}
+
+.btn--info:hover {
+  @apply border-gray-400 bg-gray-400 text-white;
+}
+
+.btn--danger {
+  @apply border-red-600 bg-red-600 text-white;
+}
+
+.btn--danger:hover {
+  @apply border-red-400 bg-red-400 text-white;
+}
+
+input {
+  @apply block w-full py-2 px-4 border-2 rounded-full mb-2;
+}
+
+textarea {
+  @apply block w-full py-2 px-4 border-2 rounded-xl mb-2;
+}
+
+label {
+  @apply block mb-2;
+}
