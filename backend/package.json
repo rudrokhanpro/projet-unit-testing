@@ -7,14 +7,18 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "cucumber": "./node_modules/.bin/cucumber-js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.3.2"
+  },
   "dependencies": {
-    "@strapi/strapi": "4.1.7",
-    "@strapi/plugin-users-permissions": "4.1.7",
     "@strapi/plugin-i18n": "4.1.7",
-    "better-sqlite3": "7.4.6"
+    "@strapi/plugin-users-permissions": "4.1.7",
+    "@strapi/strapi": "4.1.7",
+    "better-sqlite3": "7.4.6",
+    "webpack": "^5.71.0"
   },
   "author": {
     "name": "A Strapi developer"
