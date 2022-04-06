@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function DefaultNavbar() {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ export default function DefaultNavbar() {
 
   return (
     <header className="header header--default">
-      <a href="/" className="header__brand">
+      <Link to="/" className="header__brand">
         Teddit
-      </a>
+      </Link>
       <div className="header__actions">
         <button className="btn" onClick={handleSignInClick}>
           Sign in
